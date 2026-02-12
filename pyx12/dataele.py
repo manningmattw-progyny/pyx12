@@ -14,8 +14,9 @@ Interface to normalized Data Elements
 
 import os.path
 import logging
+import pkgutil
+from io import BytesIO
 import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
 
 # Intrapackage imports
 from pyx12.errors import EngineError
@@ -48,7 +49,10 @@ class DataElements(object):
             fd = open(os.path.join(base_path, dataele_file))
         else:
             logger.debug("Looking for data element definition file '{}' in pkg_resources".format(dataele_file))
-            fd = resource_stream(__name__, os.path.join('map', dataele_file))
+            data = pkgutil.get_data(__name__, 'map/' + dataele_file)
+            if data is None:
+                raise IOError("Pyx12 data element file '{}' not found in package data".format(dataele_file))
+            fd = BytesIO(data)
         for eElem in et.parse(fd).iter('data_ele'):
             ele_num = eElem.get('ele_num')
             data_type = eElem.get('data_type')

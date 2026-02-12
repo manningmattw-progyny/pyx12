@@ -6,7 +6,8 @@ pkg-plist
 .pypirc
 *.pyo
 *.pyc
-*.egg-info/
+*.egg-info
+*.egg-info/*
 .ropeproject/
 .coverage
 *.suo
@@ -16,3 +17,5 @@ testenv/
 Backup/
 *.htm
 *.pyperf
+__pycache__/*
+*/__pycache__/

@@ -14,7 +14,8 @@ External Codes interface
 
 import os.path
 import logging
-from pkg_resources import resource_stream
+import pkgutil
+from io import BytesIO
 import xml.etree.cElementTree as et
 
 # Intrapackage imports
@@ -50,7 +51,10 @@ class ExternalCodes(object):
             code_fd = open(os.path.join(base_path, codes_file))
         else:
             logger.debug("Looking for codes file '{}' in pkg_resources".format(codes_file))
-            code_fd = resource_stream(__name__, os.path.join('map', codes_file))
+            code_data = pkgutil.get_data(__name__, 'map/' + codes_file)
+            if code_data is None:
+                raise IOError("Pyx12 codes file '{}' not found in package data".format(codes_file))
+            code_fd = BytesIO(code_data)
 
         self.exclude_list = exclude.split(',') if exclude is not None else []
 

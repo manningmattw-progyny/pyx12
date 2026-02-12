@@ -1,0 +1,83 @@
+[build-system]
+requires = [
+  "hatchling>=1.20; python_version>='3.8'",
+  "setuptools<45; python_version<'3.6'",
+  "setuptools<60; python_version>='3.6' and python_version<'3.8'",
+  "wheel; python_version<'3.8'",
+]
+build-backend = "build_backend"
+backend-path = ["."]
+
+[project]
+name = "pyx12"
+version = "2.3.5"
+description = "HIPAA X12 validator, parser and converter"
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+authors = [{name = "John Holland", email = "john.holland@swmbh.org"}]
+keywords = ["x12", "hipaa", "healthcare", "edi"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Healthcare Industry",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 2",
+  "Programming Language :: Python :: 2.7",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.4",
+  "Programming Language :: Python :: 3.5",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Office/Business",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "http://github.com/azoner/pyx12"
+
+[project.scripts]
+x12html = "pyx12.scripts.x12html:main"
+x12valid = "pyx12.scripts.x12valid:main"
+x12info = "pyx12.scripts.x12info:main"
+x12norm = "pyx12.scripts.x12norm:main"
+x12xml = "pyx12.scripts.x12xml:main"
+xmlx12 = "pyx12.scripts.xmlx12:main"
+
+[tool.setuptools]
+packages = ["pyx12", "pyx12.scripts"]
+
+[tool.setuptools.package-data]
+"*" = ["*.xml", "*.md"]
+pyx12 = ["map/*.xml", "map/*.xsd"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["pyx12"]
+include = [
+  "pyx12/*.xml",
+  "pyx12/*.md",
+  "pyx12/map/*.xml",
+  "pyx12/map/*.xsd",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "LICENSE.txt",
+  "README.md",
+  "MANIFEST.in",
+  "setup.py",
+  "build_backend.py",
+  "pyx12/**/*.py",
+  "pyx12/*.xml",
+  "pyx12/*.md",
+  "pyx12/map/*.xml",
+  "pyx12/map/*.xsd",
+]
