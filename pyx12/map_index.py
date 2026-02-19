@@ -18,7 +18,8 @@ Locate the correct xml map file given:
 
 import os.path
 import logging
-from pkg_resources import resource_stream
+import pkgutil
+from io import BytesIO
 import xml.etree.cElementTree as et
 
 
@@ -38,13 +39,14 @@ class map_index(object):
         if base_path is not None:
             logger.debug("Looking for map index file '{}' in map_path '{}'".format(maps_index_file, base_path))
             if not os.path.isdir(base_path):
-                raise OSError(2, "Map path does not exist", base_path)
-            if not os.path.isdir(base_path):
                 raise OSError(2, "Pyx12 Map file '{}' does not exist in map path".format(maps_index_file), base_path)
             fd = open(os.path.join(base_path, maps_index_file))
         else:
             logger.debug("Looking for map index file '{}' in pkg_resources".format(maps_index_file))
-            fd = resource_stream(__name__, os.path.join('map', maps_index_file))
+            data = pkgutil.get_data(__name__, 'map/' + maps_index_file)
+            if data is None:
+                raise IOError("Pyx12 map index file '{}' not found in package data".format(maps_index_file))
+            fd = BytesIO(data)
         t = et.parse(fd)
         for v in t.iter('version'):
             icvn = v.get('icvn')

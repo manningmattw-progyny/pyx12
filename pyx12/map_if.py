@@ -12,10 +12,11 @@ Interface to a X12N IG Map
 """
 import logging
 import os.path
+import pkgutil
 import sys
 import re
 import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+from io import BytesIO
 
 # Intrapackage imports
 from .errors import EngineError
@@ -1535,7 +1536,10 @@ def load_map_file(map_file, param, map_path=None):
         map_fd = open(os.path.join(map_path, map_file))
     else:
         logger.debug("Looking for map file '{}' in pkg_resources".format(map_file))
-        map_fd = resource_stream(__name__, os.path.join('map', map_file))
+        data = pkgutil.get_data(__name__, 'map/' + map_file)
+        if data is None:
+            raise IOError("Pyx12 map file '{}' not found in package data".format(map_file))
+        map_fd = BytesIO(data)
     imap = None
     try:
         logger.debug('Create map from %s' % (map_file))
